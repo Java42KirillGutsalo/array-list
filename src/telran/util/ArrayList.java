@@ -2,12 +2,31 @@ package telran.util;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.function.Predicate;
 
 public class ArrayList<T> implements List<T> {
 	private static final int DEFAULT_CAPACITY = 16;
 	private T[] array;
 	private int size = 0; 
+	private class ArrayListIterator implements Iterator<T> {
+
+		@Override
+		public boolean hasNext() {
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public T next() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		@Override
+		public void remove() {
+			//TODO removes element that has been received from the last next()
+		}
+	}
 	@SuppressWarnings("unchecked")
 	public ArrayList(int capacity) {
 		array = (T[]) new Object[capacity];
@@ -111,17 +130,18 @@ public class ArrayList<T> implements List<T> {
 	}
 	@Override
 	public boolean removeIf(Predicate<T> predicate) {
-		//O[N^2]
+		//O[N]
 		int oldSize = size;
-		for (int i = size - 1; i >= 0; i--) {
-			if (predicate.test(array[i])) {
-				remove(i);
+		int indCopy = 0;
+		for (int i = 0; i < oldSize; i++) {
+			if (!predicate.test(array[i])) {
+				array[indCopy++] = array[i];
 			}
 		}
-		
+		size = indCopy;
 		return oldSize > size;
-		//TODO rewrite the method for O[N] complexity
 	}
+	//FIXME
 	@Override
 	public void sort(Comparator<T> comp) {
 		//O[N * LogN]
@@ -130,13 +150,36 @@ public class ArrayList<T> implements List<T> {
 	}
 	@Override
 	public int sortedSearch(T pattern, Comparator<T> comp) {
-		// TODO Auto-generated method stub
-		return 0;
+		int left = 0;
+		int right = size - 1;
+		int middle = 0;
+		int res = -1;
+		while (left <= right) {
+			middle = (left + right) / 2;
+			int resComp = comp.compare(pattern, array[middle]);
+			if (resComp == 0) {
+				res = middle;
+				break;
+			}
+			if (resComp > 0) {
+				left = middle + 1;
+			} else {
+				right = middle - 1;
+			}
+		}
+		return left > right ? -(left + 1) : res;
 	}
+	@SuppressWarnings("unchecked")
 	@Override
 	public void clear() {
+		array = (T[]) new Object[DEFAULT_CAPACITY];
+		size = 0;
+		//FIXME
+	}
+	@Override
+	public Iterator<T> iterator() {
 		// TODO Auto-generated method stub
-		
+		return null;
 	}
 	
 
