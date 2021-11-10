@@ -5,26 +5,27 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.function.Predicate;
 
-public class ArrayList<T> implements List<T> {
+public class ArrayList<T> extends AbstractList<T> {
 	private static final int DEFAULT_CAPACITY = 16;
 	private T[] array;
-	private int size = 0; 
+	
 	private class ArrayListIterator implements Iterator<T> {
-
+		int current = 0;
+		
 		@Override
 		public boolean hasNext() {
-			// TODO Auto-generated method stub
-			return false;
+			
+			return current < size;
 		}
 
 		@Override
 		public T next() {
-			// TODO Auto-generated method stub
-			return null;
+			
+			return array[current++];
 		}
 		@Override
 		public void remove() {
-			//TODO removes element that has been received from the last next()
+			ArrayList.this.remove(--current);
 		}
 	}
 	@SuppressWarnings("unchecked")
@@ -34,6 +35,7 @@ public class ArrayList<T> implements List<T> {
 	public ArrayList() {
 		this(DEFAULT_CAPACITY);
 	}
+	
 	@Override
 	public void add(T element) {
 		//O[1]
@@ -42,11 +44,8 @@ public class ArrayList<T> implements List<T> {
 			allocate();
 		}
 		array[size++] = element;
-		
-		
 	}
 	
-		
 	private void allocate() {
 		array = Arrays.copyOf(array, array.length * 2);
 		
@@ -72,21 +71,11 @@ public class ArrayList<T> implements List<T> {
 	}
 
 	@Override
-	public int size() {
-		//O[1]
-		return size;
-	}
-
-	@Override
 	public T get(int index) {
 		//O[1]
 		return isValidIndex(index) ? array[index] : null;
 	}
 
-	private boolean isValidIndex(int index) {
-		
-		return index >= 0 && index < size;
-	}
 	@Override
 	public T remove(int index) {
 		//O[N]
@@ -97,13 +86,10 @@ public class ArrayList<T> implements List<T> {
 			System.arraycopy(array, index + 1, array, index, size - index);
 			//FIXME regarding setting null
 		}
-		
 		return res;
 	}
 	
-	
-	
-	
+
 	@Override
 	public int indexOf(Predicate<T> predicate) {
 		//O[N]
@@ -178,8 +164,8 @@ public class ArrayList<T> implements List<T> {
 	}
 	@Override
 	public Iterator<T> iterator() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return new ArrayListIterator();
 	}
 	
 
