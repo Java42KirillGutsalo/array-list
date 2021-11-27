@@ -10,8 +10,7 @@ public class ArrayList<T> extends AbstractList<T> {
 	private T[] array;
 	
 	private class ArrayListIterator implements Iterator<T> {
-		int current = 0;
-		
+int current = 0;
 		@Override
 		public boolean hasNext() {
 			
@@ -25,7 +24,9 @@ public class ArrayList<T> extends AbstractList<T> {
 		}
 		@Override
 		public void remove() {
+			//removes element that has been received from the last next()
 			ArrayList.this.remove(--current);
+			
 		}
 	}
 	@SuppressWarnings("unchecked")
@@ -35,7 +36,6 @@ public class ArrayList<T> extends AbstractList<T> {
 	public ArrayList() {
 		this(DEFAULT_CAPACITY);
 	}
-	
 	@Override
 	public void add(T element) {
 		//O[1]
@@ -44,8 +44,11 @@ public class ArrayList<T> extends AbstractList<T> {
 			allocate();
 		}
 		array[size++] = element;
+		
+		
 	}
 	
+		
 	private void allocate() {
 		array = Arrays.copyOf(array, array.length * 2);
 		
@@ -70,12 +73,15 @@ public class ArrayList<T> extends AbstractList<T> {
 		return res;
 	}
 
+	
+
 	@Override
 	public T get(int index) {
 		//O[1]
 		return isValidIndex(index) ? array[index] : null;
 	}
 
+	
 	@Override
 	public T remove(int index) {
 		//O[N]
@@ -86,10 +92,13 @@ public class ArrayList<T> extends AbstractList<T> {
 			System.arraycopy(array, index + 1, array, index, size - index);
 			//FIXME regarding setting null
 		}
+		
 		return res;
 	}
 	
-
+	
+	
+	
 	@Override
 	public int indexOf(Predicate<T> predicate) {
 		//O[N]
@@ -122,12 +131,13 @@ public class ArrayList<T> extends AbstractList<T> {
 		for (int i = 0; i < oldSize; i++) {
 			if (!predicate.test(array[i])) {
 				array[indCopy++] = array[i];
-			}
+			} 
 		}
 		size = indCopy;
+		
 		return oldSize > size;
+		//FIXME 
 	}
-	//FIXME
 	@Override
 	public void sort(Comparator<T> comp) {
 		//O[N * LogN]
@@ -136,6 +146,7 @@ public class ArrayList<T> extends AbstractList<T> {
 	}
 	@Override
 	public int sortedSearch(T pattern, Comparator<T> comp) {
+		//implied that array is sorted in accordance with a given comparator
 		int left = 0;
 		int right = size - 1;
 		int middle = 0;
@@ -153,7 +164,7 @@ public class ArrayList<T> extends AbstractList<T> {
 				right = middle - 1;
 			}
 		}
-		return left > right ? -(left + 1) : res;
+		return  left > right ? -(left + 1) : res;
 	}
 	@SuppressWarnings("unchecked")
 	@Override
@@ -161,6 +172,7 @@ public class ArrayList<T> extends AbstractList<T> {
 		array = (T[]) new Object[DEFAULT_CAPACITY];
 		size = 0;
 		//FIXME
+		
 	}
 	@Override
 	public Iterator<T> iterator() {
