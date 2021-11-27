@@ -12,6 +12,13 @@ public class ArrayList<T> extends AbstractList<T> {
 	
 	private class ArrayListIterator implements Iterator<T> {
 		int current = 0;
+		/* V.R.
+		 *  The variable flagNext has to be initialised by false. It prevents
+		 *  the following incorrect case:
+		 *  Iterator<T> itr = arList.iterator();
+		 *  // Call remove without next().
+		 *  itr.remove();
+		 */
 		boolean flagNext;
 		
 		@Override
