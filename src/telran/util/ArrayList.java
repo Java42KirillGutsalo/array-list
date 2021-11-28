@@ -3,7 +3,6 @@ package telran.util;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 
 public class ArrayList<T> extends AbstractList<T> {
@@ -12,7 +11,6 @@ public class ArrayList<T> extends AbstractList<T> {
 	
 	private class ArrayListIterator implements Iterator<T> {
 		int current = 0;
-		boolean flagNext;
 		
 		@Override
 		public boolean hasNext() {
@@ -23,15 +21,15 @@ public class ArrayList<T> extends AbstractList<T> {
 		@Override
 		public T next() {
 			if(current >= size) {
-				throw new NoSuchElementException();
+				noSuchElementException();
 			}
 			flagNext = true;
 			return array[current++];
 		}
 		@Override
 		public void remove() {
-			if(flagNext == false) {
-				throw new IllegalStateException();
+			if(!flagNext) {
+				illegalStateException();
 			}
 			ArrayList.this.remove(--current);
 			flagNext = false;
@@ -51,7 +49,7 @@ public class ArrayList<T> extends AbstractList<T> {
 		if (size == array.length) {
 			//size is capacity
 			allocate();
-		}
+		} 
 		array[size++] = element;
 	}
 	
