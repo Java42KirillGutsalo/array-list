@@ -9,8 +9,9 @@ public class ArrayList<T> extends AbstractList<T> {
 	private static final int DEFAULT_CAPACITY = 16;
 	private T[] array;
 	
-	private class ArrayListIterator implements Iterator<T> {
-int current = 0;
+	private class ArrayListIterator extends AbstractIterator<T> {
+		int current = 0;
+		
 		@Override
 		public boolean hasNext() {
 			
@@ -18,21 +19,22 @@ int current = 0;
 		}
 
 		@Override
-		public T next() {
-			
+		protected T nextObject() {
 			return array[current++];
 		}
+		
 		@Override
-		public void remove() {
 			//removes element that has been received from the last next()
+		protected void removeObject() {
 			ArrayList.this.remove(--current);
-			
 		}
 	}
+	
 	@SuppressWarnings("unchecked")
 	public ArrayList(int capacity) {
 		array = (T[]) new Object[capacity];
 	}
+	
 	public ArrayList() {
 		this(DEFAULT_CAPACITY);
 	}
