@@ -13,8 +13,7 @@ public class ArrayList<T> extends AbstractList<T> {
 		int current = 0;
 		
 		@Override
-		public boolean hasNext() {
-			
+		public boolean hasNext() {	
 			return current < size;
 		}
 
@@ -38,6 +37,7 @@ public class ArrayList<T> extends AbstractList<T> {
 	public ArrayList() {
 		this(DEFAULT_CAPACITY);
 	}
+	
 	@Override
 	public void add(T element) {
 		//O[1]
@@ -46,15 +46,12 @@ public class ArrayList<T> extends AbstractList<T> {
 			allocate();
 		}
 		array[size++] = element;
-		
-		
 	}
 	
-		
 	private void allocate() {
-		array = Arrays.copyOf(array, array.length * 2);
-		
+		array = Arrays.copyOf(array, array.length * 2);	
 	}
+	
 	@Override
 	public boolean add(int index, T element) {
 		//O[N]
@@ -62,7 +59,6 @@ public class ArrayList<T> extends AbstractList<T> {
 		if (index == size) {
 			add(element);
 			res = true;
-			
 		} else if(isValidIndex(index)) {
 			res = true;
 			if (size == array.length) {
@@ -75,15 +71,12 @@ public class ArrayList<T> extends AbstractList<T> {
 		return res;
 	}
 
-	
-
 	@Override
 	public T get(int index) {
 		//O[1]
 		return isValidIndex(index) ? array[index] : null;
 	}
 
-	
 	@Override
 	public T remove(int index) {
 		//O[N]
@@ -92,14 +85,10 @@ public class ArrayList<T> extends AbstractList<T> {
 			res = array[index];
 			size--;
 			System.arraycopy(array, index + 1, array, index, size - index);
-			//FIXME regarding setting null
+			array[size] = null;
 		}
-		
 		return res;
 	}
-	
-	
-	
 	
 	@Override
 	public int indexOf(Predicate<T> predicate) {
@@ -113,6 +102,7 @@ public class ArrayList<T> extends AbstractList<T> {
 				}
 				return res;
 	}
+	
 	@Override
 	public int lastIndexOf(Predicate<T> predicate) {
 		//O[N]
@@ -125,6 +115,7 @@ public class ArrayList<T> extends AbstractList<T> {
 				}
 				return res;
 	}
+	
 	@Override
 	public boolean removeIf(Predicate<T> predicate) {
 		//O[N]
@@ -136,16 +127,18 @@ public class ArrayList<T> extends AbstractList<T> {
 			} 
 		}
 		size = indCopy;
-		
-		return oldSize > size;
-		//FIXME 
+		for(int i = size; i < oldSize; i++) {
+			array[i] = null; //JVM will consider that objects as garbage in the case no other references
+		}
+		return oldSize > size; 
 	}
+	
 	@Override
 	public void sort(Comparator<T> comp) {
 		//O[N * LogN]
 		Arrays.sort(array, 0, size, comp);
-		
 	}
+	
 	@Override
 	public int sortedSearch(T pattern, Comparator<T> comp) {
 		//implied that array is sorted in accordance with a given comparator
@@ -168,19 +161,18 @@ public class ArrayList<T> extends AbstractList<T> {
 		}
 		return  left > right ? -(left + 1) : res;
 	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public void clear() {
+		removeIf(e -> true);
+		array = null;
 		array = (T[]) new Object[DEFAULT_CAPACITY];
 		size = 0;
-		//FIXME
-		
-	}
-	@Override
-	public Iterator<T> iterator() {
-		
-		return new ArrayListIterator();
 	}
 	
-
+	@Override
+	public Iterator<T> iterator() {
+		return new ArrayListIterator();
+	}
 }
